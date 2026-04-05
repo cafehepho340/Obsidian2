@@ -6406,8 +6406,8 @@ function Library:CreateWindow(WindowInfo)
         RightWrapper = New("Frame", {
             AnchorPoint = Vector2.new(1, 0.5),
             BackgroundTransparency = 1,
-            Position = UDim2.new(1, -49, 0.5, 0),
-            Size = UDim2.new(1, -InitialLeftWidth - 57 - 1, 1, -16),
+            Position = UDim2.new(1, -89, 0.5, 0),
+            Size = UDim2.new(1, -InitialLeftWidth - 97 - 1, 1, -16),
             Parent = TopBar,
         })
 
@@ -6418,6 +6418,38 @@ function Library:CreateWindow(WindowInfo)
             Padding = UDim.new(0, 8),
             Parent = RightWrapper,
         })
+
+        local CloseIconData = Library:GetIcon("x") or { Url = "", ImageRectOffset = Vector2.zero, ImageRectSize = Vector2.zero }
+
+        local CloseBtn = New("ImageButton", {
+            AnchorPoint = Vector2.new(1, 0.5),
+            Position = UDim2.new(1, -8, 0.5, 0),
+            Size = UDim2.fromOffset(28, 28),
+            Image = CloseIconData.Url,
+            ImageRectOffset = CloseIconData.ImageRectOffset,
+            ImageRectSize = CloseIconData.ImageRectSize,
+            ImageColor3 = "FontColor",
+            ImageTransparency = 0.4,
+            Parent = TopBar,
+        })
+        table.insert(Library.Corners, New("UICorner", { CornerRadius = UDim.new(0, 6), Parent = CloseBtn }))
+        Library:AddOutline(CloseBtn)
+
+        CloseBtn.MouseEnter:Connect(function()
+            TweenService:Create(CloseBtn, Library.TweenInfo, {
+                ImageTransparency = 0,
+                BackgroundColor3 = Library.Scheme.RedColor,
+            }):Play()
+        end)
+        CloseBtn.MouseLeave:Connect(function()
+            TweenService:Create(CloseBtn, Library.TweenInfo, {
+                ImageTransparency = 0.4,
+                BackgroundColor3 = Library.Scheme.MainColor,
+            }):Play()
+        end)
+        CloseBtn.MouseButton1Click:Connect(function()
+            Library:Toggle()
+        end)
 
         CurrentTabInfo = New("Frame", {
             Size = UDim2.fromScale(WindowInfo.DisableSearch and 1 or 0.5, 1),
